@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #0f0f0f;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    #calculator {
+      background-color: #1a1a1a;
+      padding: 24px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      width: 100%;
+      max-width: 360px;
+    }
+
+    #screen {
+      background-color: #0a0a0a;
+      height: 100px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      padding: 20px;
+      text-align: right;
+      overflow: hidden;
+      border: 1px solid #333;
+    }
+
+    #resultScreen {
+      font-size: 2.8rem;
+      font-weight: 300;
+      color: #ffffff;
+      word-break: break-all;
+      line-height: 1.1;
+    }
+
+    .buttonRow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      height: 70px;
+      border: none;
+      border-radius: 16px;
+      font-size: 1.4rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background-color: #252525;
+      color: #ffffff;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Operator buttons */
+    .btn.operator {
+      background-color: #ff9500;
+      color: white;
+      font-weight: 600;
+    }
+
+    .btn.operator:hover {
+      background-color: #ffb143;
+    }
+
+    /* Clear button */
+    .btn.clear {
+      background-color: #333;
+      color: #ff6b6b;
+    }
+
+    .btn.clear:hover {
+      background-color: #444;
+    }
+
+    /* Delete button */
+    .btn.delete {
+      background-color: #3a3a3a;
+      color: #ffcc5c;
+      font-weight: 600;
+    }
+
+    .btn.delete:hover {
+      background-color: #4a4a4a;
+      color: #ffe38a;
+    }
+
+    /* Equal button */
+    .btn.equal {
+      background-color: #00d4aa;
+      color: white;
+      font-weight: 600;
+    }
+
+    .btn.equal:hover {
+      background-color: #00e6b8;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="calculator">
+    <div id="screen">
+      <p id="resultScreen">0</p>
+    </div>
+
+    <div id="buttonZone">
+      <div class="buttonRow">
+        <button class="btn delete" onclick="deleteLast()">Del</button>
+        <button class="btn" onclick="addNum('(')">(</button>
+        <button class="btn" onclick="addNum(')')">)</button>
+        <button class="btn operator" onclick="addOperator(' / ')">÷</button>
+      </div>
+      <div class="buttonRow">
+        <button class="btn" onclick="addNum(7)">7</button>
+        <button class="btn" onclick="addNum(8)">8</button>
+        <button class="btn" onclick="addNum(9)">9</button>
+        <button class="btn operator" onclick="addOperator(' * ')">×</button>
+      </div>
+      <div class="buttonRow">
+        <button class="btn" onclick="addNum(4)">4</button>
+        <button class="btn" onclick="addNum(5)">5</button>
+        <button class="btn" onclick="addNum(6)">6</button>
+        <button class="btn operator" onclick="addOperator(' - ')">−</button>
+      </div>
+      <div class="buttonRow">
+        <button class="btn" onclick="addNum(1)">1</button>
+        <button class="btn" onclick="addNum(2)">2</button>
+        <button class="btn" onclick="addNum(3)">3</button>
+        <button class="btn operator" onclick="addOperator(' + ')">+</button>
+      </div>
+      <div class="buttonRow">
+        <button class="btn clear" onclick="clearResult()">C</button>
+        <button class="btn" onclick="addNum(0)">0</button>
+        <button class="btn" onclick="addNum('.')">.</button>
+        <button class="btn equal" onclick="showResult()">=</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let calculation = '';
+    // false = not calculated yet, false = calculated
+    // if calculated, then clear 'calculation'
+    let isCalculated = false;
+
+    function addNum(num) {
+      if (isCalculated) {
+        calculation = '';
+        isCalculated = false;
+      }
+      calculation += num;
+      document.getElementById('resultScreen').textContent = calculation || '0';
+    }
+
+    function addOperator(operator){
+      isCalculated = false;
+      calculation += operator;
+      document.getElementById('resultScreen').textContent = calculation || '0';
+    }
+
+    function showResult() {
+      if (!calculation) return;
+      try {
+        let result = eval(calculation.replace('×', '*').replace('÷', '/'));
+        calculation = String(result);
+        isCalculated = true;
+        document.getElementById('resultScreen').textContent = result;
+      } catch (e) {
+        document.getElementById('resultScreen').textContent = 'Error';
+        calculation = '';
+        isCalculated = true;
+      }
+    }
+
+    function clearResult() {
+      calculation = '';
+      isCalculated = false;
+      document.getElementById('resultScreen').textContent = '0';
+    }
+    
+    function deleteLast() {
+      if (isCalculated) {
+        clearResult();
+        return;
+      }
+      calculation = calculation.slice(0, -1);
+      document.getElementById('resultScreen').textContent = calculation || '0';
+    }
+  </script>
+</body>
+</html>
